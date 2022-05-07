@@ -8,6 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters.Soap;
+using System.Xml.Serialization;
+using System.Text.Json;
+
 namespace FirstWindows
 {
     public partial class Form4 : Form
@@ -23,7 +28,7 @@ namespace FirstWindows
             try
             {
                 string path = @"D:\Test Folder";
-                if(Directory.Exists(path))
+                if (Directory.Exists(path))
                 {
                     MessageBox.Show("Folder already Exists");
                 }
@@ -109,6 +114,203 @@ namespace FirstWindows
             {
                 fs.Close();
             }
+        }
+
+        private void btnWrite_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Depatrtment dept = new Depatrtment();
+                dept.Id = Convert.ToInt32(txtId.Text);
+                dept.Name = txtName.Text;
+                dept.Location = txtLocation.Text;
+                fs = new FileStream(@"D:\Test Folder\Department.txt", FileMode.Create, FileAccess.Write);
+                BinaryFormatter binary = new BinaryFormatter();
+                binary.Serialize(fs, dept);
+                MessageBox.Show("Done");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                fs.Close();
+            }
+
+        }
+
+        private void btnReadBinary_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+                Depatrtment dept = new Depatrtment();
+               
+                fs = new FileStream(@"D:\Test Folder\Department.txt", FileMode.Open, FileAccess.Read);
+                BinaryFormatter binary = new BinaryFormatter();
+                dept = (Depatrtment)binary.Deserialize(fs);
+                txtId.Text = dept.Id.ToString();
+                txtName.Text = dept.Name;
+                txtLocation.Text = dept.Location;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
+
+        private void btnSoapWrite_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Depatrtment dept = new Depatrtment();
+                dept.Id = Convert.ToInt32(txtId.Text);
+                dept.Name = txtName.Text;
+                dept.Location = txtLocation.Text;
+                fs = new FileStream(@"D:\Test Folder\Department Soap.txt", FileMode.Create, FileAccess.Write);
+                SoapFormatter soap = new SoapFormatter();
+                soap.Serialize(fs, dept);
+                MessageBox.Show("Done");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
+
+        private void btnSoapRead_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Depatrtment dept = new Depatrtment();
+
+                fs = new FileStream(@"D:\Test Folder\Department Soap.txt", FileMode.Open, FileAccess.Read);
+                SoapFormatter soap = new SoapFormatter();
+                dept = (Depatrtment)soap.Deserialize(fs);
+                txtId.Text = dept.Id.ToString();
+                txtName.Text = dept.Name;
+                txtLocation.Text = dept.Location;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
+
+        private void btnXmlWrite_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Depatrtment dept = new Depatrtment();
+                dept.Id = Convert.ToInt32(txtId.Text);
+                dept.Name = txtName.Text;
+                dept.Location = txtLocation.Text;
+                fs = new FileStream(@"D:\Test Folder\Department Xml.txt", FileMode.Create, FileAccess.Write);
+                XmlSerializer Xml = new XmlSerializer(typeof(Depatrtment));
+                Xml.Serialize(fs, dept);
+                MessageBox.Show("Done");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
+
+        private void btnXmlRead_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Depatrtment dept = new Depatrtment();
+
+                fs = new FileStream(@"D:\Test Folder\Department Xml.txt", FileMode.Open, FileAccess.Read);
+                XmlSerializer xml = new XmlSerializer(typeof(Depatrtment));
+                dept = (Depatrtment)xml.Deserialize(fs);
+                txtId.Text = dept.Id.ToString();
+                txtName.Text = dept.Name;
+                txtLocation.Text = dept.Location;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
+
+        private void txtId_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnJsonWrite_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Depatrtment dept = new Depatrtment();
+                dept.Id = Convert.ToInt32(txtId.Text);
+                dept.Name = txtName.Text;
+                dept.Location = txtLocation.Text;
+                fs = new FileStream(@"D:\Test Folder\Department Json.txt", FileMode.Create, FileAccess.Write);
+               
+                JsonSerializer.Serialize(fs, dept);
+                MessageBox.Show("Done");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
+
+        private void btnJsonRead_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Depatrtment dept = new Depatrtment();
+
+                fs = new FileStream(@"D:\Test Folder\Department Json.txt", FileMode.Open, FileAccess.Read);
+                dept = JsonSerializer.Deserialize<Depatrtment>(fs);
+                txtId.Text = dept.Id.ToString();
+                txtName.Text = dept.Name;
+                txtLocation.Text = dept.Location;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            txtId.Clear();
+            txtLocation.Clear();
+            txtName.Clear();
         }
     }
 }
